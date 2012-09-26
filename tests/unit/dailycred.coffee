@@ -2,12 +2,11 @@ $ ->
   module "dailycred SDK"
 
   DC.init
-    clientId: "4337ed55-aaca-4e38-8824-6c016c59dd5b"
-    oauth: false
+    clientId: "4133a23f-b9c3-47e4-8989-cfb30510079d"
 
-  user_id = "97a85558-c5a6-47de-ab89-4e7de02c99bd"
+  user_id = "539cdef5-3bdc-4133-9f6c-34f68f1c54bc"
   randomEmail = "dctest#{Math.floor(Math.random()*11111)}@dailycred.com"
-  secret = "34f2ecc3-f955-4292-9747-39b876d91d8b-a4f7ad8e-f8a4-4573-b23d-686f6e28a820"
+  secret = "a1c21e72-98d8-47c2-9e9a-1e2dcd363b2f-f353b2af-1f51-416c-ad4c-59e70721dfab"
 
   baseUser = new DC.User
     email: randomEmail
@@ -66,16 +65,3 @@ $ ->
       ok !user
       equals e.attribute, "form"
       start()
-
-  test "delete user", ->
-    stop()
-    url = "#{DC.baseUrl()}/admin/test-delete?email=#{randomEmail}&key=#{secret}&id=#{DC.clientId}"
-    $.ajax
-      url: url
-      success: (data)->
-        equals data, "success"
-        start()
-      error: (e) ->
-        ok false
-        console.log "Delete user failed.","Total: ", details.total, " Failed: ", details.failed, " Passed: ", details.passed, " Runtime: ", details.runtime
-        start()
