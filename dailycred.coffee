@@ -196,7 +196,6 @@ class Dailycred
       dataType: 'json'
       success: (data) ->
         if data.worked
-          p data.user
           cb(null, new User(data.user))
         else
           cb error("Unable to save user")
