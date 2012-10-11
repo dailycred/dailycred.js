@@ -43,19 +43,16 @@ methods =
       type: 'post'
       success: (response) ->
         if response.worked
-          data.success(response)
-          data.after response
+          data.after undefined, response
         else
-          data.error(response.errors[0])
           data.after response.errors[0]
       error: ->
         e =
           message: "Server Error."
           attribute: "Form"
-        data.error e
         data.after e
     false
-  action: (action) ->
+  method: (action) ->
     data = this.data('dailycred')
     data.method = action
     this.data('dailycred', data)
@@ -72,12 +69,11 @@ $.fn.dailycred = (method, arg)->
 
 $(document).ready ->
   $('#dailycred').dailycred
-    redirect_uri: "http://www.localhost:9000"
     client_id: "dailycred"
     style: 'user'
     after: (obj) ->
       $('#dailycred-jq-response').html JSON.stringify(obj, undefined, 2)
       prettyPrint()
   $('#demo-signup').click ->
-    $('#dailycred').dailycred('action','signup').dailycred('submit')
+    $('#dailycred').dailycred('method','signup').dailycred('submit')
     false
