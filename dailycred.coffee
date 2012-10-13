@@ -158,11 +158,9 @@ class Dailycred
 
   event: (id, key, val, cb)->
     cb = cb || ->
-    if id == undefined || key == undefined
-      throw "First two method arguments are required (userId and key)"
     if toType(val) == "function" then cb = val
     valParam = "valuestring"
-    valVal = val
+    val = val || ""
     valString = "valuestring=#{val}"
     if toType(val) == "object" then valString = paramitizeObj val, "valueobj"
     url = "#{customEventUrl}?"

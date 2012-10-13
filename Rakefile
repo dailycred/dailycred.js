@@ -10,7 +10,7 @@ task :upload do
     "js/dailycred.js",
     File.open("dailycred.js"),
     'file.dailycred.com',
-    :content_type => 'application/octet-stream')
+    :content_type => 'text/javascript')
 
   print "Uploaded.\n"
 end

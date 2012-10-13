@@ -200,16 +200,13 @@
     };
 
     Dailycred.prototype.event = function(id, key, val, cb) {
-      var url, valParam, valString, valVal;
+      var url, valParam, valString;
       cb = cb || function() {};
-      if (id === void 0 || key === void 0) {
-        throw "First two method arguments are required (userId and key)";
-      }
       if (toType(val) === "function") {
         cb = val;
       }
       valParam = "valuestring";
-      valVal = val;
+      val = val || "";
       valString = "valuestring=" + val;
       if (toType(val) === "object") {
         valString = paramitizeObj(val, "valueobj");
