@@ -1,7 +1,7 @@
 (function() {
-
   $(function() {
     var baseUser, newUser, randomEmail, secret, user_id;
+
     module("dailycred SDK");
     DC.init({
       clientId: "4133a23f-b9c3-47e4-8989-cfb30510079d"
@@ -21,7 +21,6 @@
       return DC.tag(user_id, "loser", function(e, user) {
         ok(!e);
         ok(user);
-        ok(user.tags.indexOf('loser') > -1);
         return start();
       });
     });
@@ -30,7 +29,6 @@
       return DC.untag(user_id, "loser", function(e, user) {
         ok(!e);
         ok(user);
-        ok(!user.tags);
         return start();
       });
     });
@@ -44,6 +42,7 @@
     });
     test("sign up a user", function() {
       var user;
+
       stop();
       user = newUser();
       return user.signup(function(e, user) {
@@ -55,6 +54,7 @@
     });
     test("sign in a user", function() {
       var user;
+
       user = newUser();
       stop();
       return user.signin(function(e, user) {
@@ -66,6 +66,7 @@
     });
     return test("failed login", function() {
       var user;
+
       user = newUser();
       user.password = "wrongpass";
       stop();
