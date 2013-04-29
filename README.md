@@ -23,10 +23,6 @@ Then initialize the library with your [client_id](https://www.dailycred.com/admi
   DC.init({
     "clientId" : 'YOUR_CLIENT_ID', // your dailycred client_id, only required when not using the tracking script
     "callback" : 'http://your_callback_url.com/callback', //your OAuth callback URL. this is required if you specify OAuth == true
-    "showModal": true, //optional, whether you would like to get a template login form
-    "modal"    : {
-      "triggers" : ["#sign-up-btn", '.auth-link'] //optional, if you specify showModal to true, you can specify this array of css selectors to invoke the login dialogue on click.
-    },
     "oauth"    : true // defaults to false. Specifying OAuth to true will send all users to the specified callback URL after successfully signing in
   });
 </script>  
