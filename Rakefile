@@ -8,7 +8,7 @@ task :upload do
 
   AWS::S3::S3Object.store(
     "js/dailycred.js",
-    File.open("dailycred.js"),
+    File.open("tests/js/dailycred.js"),
     'file.dailycred.com',
     :content_type => 'text/javascript')
 
