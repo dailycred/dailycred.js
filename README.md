@@ -27,12 +27,24 @@ DC.signin({
     console.log("Error on " + error.attribute + ": " + error.message);
   } else {
     // do something with your user!
-    console.log("Signup successful", user);
+    console.log("Signin successful", user);
   }
 });
 ~~~
 
 **Calling `signup` with an existing user's credentials will successfully sign them in.**
+
+## Fire an Event
+
+The `event` method requires a `user_id` and `key` parameter, with an optional `value` parameter.
+
+~~~javascript
+DC.event user.id, "Visiting Demo Page"
+
+DC.event "xxx-yyy-xxx-yyy", "Stopped Homepage Video", video.playbackTime
+
+DC.event user.id, "Donated", $('#donation').val()
+~~~
 
 ### Testing
 

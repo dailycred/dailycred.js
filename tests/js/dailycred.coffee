@@ -174,7 +174,7 @@ class Dailycred
           user = new User data.user
           cb(null, user)
         else
-          cb error("Unable to save user")
+          cb error("Unable to fire event for user")
       error: ->
         cb error "Server error"
 

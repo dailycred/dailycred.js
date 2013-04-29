@@ -234,7 +234,7 @@
             user = new User(data.user);
             return cb(null, user);
           } else {
-            return cb(error("Unable to save user"));
+            return cb(error("Unable to fire event for user"));
           }
         },
         error: function() {
