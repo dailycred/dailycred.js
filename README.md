@@ -2,7 +2,29 @@
 
 This is a client side library for interacting with Dailycred.
 
+## Installation
 
+[Download the library](https://raw.github.com/dailycred/dailycred.js/master/tests/js/dailycred.js) and import it into your application:
+
+~~~HTML
+<script src="/assets/dailycred.js"></script>
+~~~
+
+Or if you prefer the github-hosted version:
+
+~~~HTML
+
+<script src="https://raw.github.com/dailycred/dailycred.js/master/tests/js/dailycred.js"></script>
+
+~~~
+
+Then initialize the library with your [client_id](https://www.dailycred.com/admin/keys).
+
+~~~HTML
+<script>
+DC.init({client_id: "my_client_id"});
+</script>
+~~~
 
 ## Authentication
 
