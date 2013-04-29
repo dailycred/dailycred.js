@@ -13,6 +13,7 @@ task :upload do
     :content_type => 'text/javascript')
 
   print "Uploaded.\n"
+  Rake::Task["docs"].invoke
 end
 
 task :default => :upload
@@ -29,4 +30,5 @@ task :docs do
   end
   doc = Maruku.new(md)
   File.open("/Users/hank/java/dailycred/app/views/tags/docs/javascriptsdk.html", 'w') {|f| f.write doc.to_html}
+  print "Made Docs.\n"
 end

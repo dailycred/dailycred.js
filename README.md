@@ -4,7 +4,7 @@ This is a client side library for interacting with Dailycred.
 
 ## Installation
 
-[Download the library](https://raw.github.com/dailycred/dailycred.js/master/tests/js/dailycred.js) and import it into your application:
+[Download the library](https://s3.amazonaws.com/file.dailycred.com/js/dailycred.js) and import it into your application:
 
 
     <script src="/assets/dailycred.js" type='text/javascript'></script>
