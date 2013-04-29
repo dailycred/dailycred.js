@@ -6,7 +6,7 @@ This is a client side library for interacting with Dailycred.
 
 ## Authentication
 
-~~~
+~~~javascript
 DC.signup({
   email: "email@test.com",
   password: "password"
