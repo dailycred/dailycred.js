@@ -16,3 +16,17 @@ task :upload do
 end
 
 task :default => :upload
+
+desc 'docs'
+task :docs do
+  require 'fileutils'
+  require 'maruku'
+  md = ""
+  File.open("README.md", "r") do |infile|
+    while (line = infile.gets)
+      md += line
+    end
+  end
+  doc = Maruku.new(md)
+  File.open("/Users/hank/java/dailycred/app/views/tags/docs/javascriptsdk.html", 'w') {|f| f.write doc.to_html}
+end
