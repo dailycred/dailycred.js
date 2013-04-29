@@ -26,6 +26,7 @@
 
   map = function(model, obj, blocks, onlys) {
     var key, val, _results;
+
     if (blocks === void 0) {
       blocks = [];
     }
@@ -54,6 +55,7 @@
 
   fixBools = function(obj, keys) {
     var b, key, _i, _len, _results;
+
     _results = [];
     for (_i = 0, _len = keys.length; _i < _len; _i++) {
       key = keys[_i];
@@ -68,15 +70,17 @@
   };
 
   this.supports_html5_storage = function() {
+    var e;
+
     try {
       return __indexOf.call(window, 'localStorage') >= 0 && window['localStorage'] !== null;
-    } catch (e) {
+    } catch (_error) {
+      e = _error;
       return false;
     }
   };
 
   User = (function() {
-
     function User(model) {
       this.username = this.email = this.password = this.verified = this.guest = this.admin = this.tags = this.subscribed = this.referred_by = this.id = null;
       map(this, model);
@@ -85,6 +89,7 @@
 
     User.prototype.serialize = function() {
       var params;
+
       params = [];
       params.push("email=" + this.email);
       params.push("pass=" + this.password);
@@ -100,6 +105,7 @@
 
     User.prototype.signup = function(cb) {
       var _this = this;
+
       return $.ajax({
         url: signUpUrl + "?" + this.serialize(),
         dataType: 'json',
@@ -122,6 +128,7 @@
 
     User.prototype.signin = function(cb) {
       var _this = this;
+
       return $.ajax({
         url: "" + signInUrl + "?" + (this.serialize()),
         dataType: 'json',
@@ -147,11 +154,11 @@
   })();
 
   Dailycred = (function() {
-
     Dailycred.prototype.User = User;
 
     function Dailycred() {
       var opts;
+
       opts = window.dc_opts || {};
       map(this, opts);
     }
@@ -159,6 +166,7 @@
     Dailycred.prototype.init = function(opts) {
       var userId, _ref, _ref1,
         _this = this;
+
       opts = opts || {};
       opts.clientId = opts.clientId || ((_ref = window.dc_opts) != null ? _ref.clientId : void 0);
       this.oauth = opts.oauth || false;
@@ -201,6 +209,7 @@
 
     Dailycred.prototype.event = function(id, key, val, cb) {
       var url, valParam, valString;
+
       cb = cb || function() {};
       if (toType(val) === "function") {
         cb = val;
@@ -220,6 +229,7 @@
         dataType: 'json',
         success: function(data) {
           var user;
+
           if (data.worked) {
             user = new User(data.user);
             return cb(null, user);
@@ -239,6 +249,20 @@
 
     Dailycred.prototype.untag = function(id, tag, cb) {
       return this.tagOrUntag(untagUrl, id, tag, cb);
+    };
+
+    Dailycred.prototype.signup = function(params, cb) {
+      var user;
+
+      user = new User(params);
+      return user.signup(cb);
+    };
+
+    Dailycred.prototype.signin = function(params, cb) {
+      var user;
+
+      user = new User(params);
+      return user.signin(cb);
     };
 
     Dailycred.prototype.tagOrUntag = function(url, id, tag, cb) {
@@ -268,6 +292,7 @@
 
     Dailycred.prototype.connectWith = function(provider) {
       var params;
+
       params = ["client_id=" + this.client_id];
       if (this.callback) {
         params.push("redirect_uri=" + this.callback);
@@ -292,9 +317,9 @@
   })();
 
   ModalTemplate = (function() {
-
     function ModalTemplate(data, opts) {
       var selector, _i, _len, _ref;
+
       this.template = data;
       this.render();
       dcModalInit();
@@ -315,6 +340,7 @@
 
     ModalTemplate.prototype.bindToEl = function($el) {
       var _this = this;
+
       return $el.click(function() {
         _this.show();
         return false;

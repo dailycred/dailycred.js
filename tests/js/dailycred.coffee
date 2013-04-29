@@ -184,6 +184,13 @@ class Dailycred
   untag: (id, tag, cb) ->
     @tagOrUntag untagUrl, id, tag, cb
 
+  signup: (params, cb) ->
+    user = new User(params)
+    user.signup(cb)
+
+  signin: (params, cb) ->
+    user = new User(params)
+    user.signin(cb)
 
   tagOrUntag: (url, id, tag, cb)->
     cb = cb || ->
@@ -222,6 +229,7 @@ class Dailycred
 
   googleConnect: ->
     @connectWith 'google'
+
 
 class ModalTemplate
 
