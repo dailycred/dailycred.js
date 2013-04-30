@@ -103,6 +103,21 @@
       return params.join("&");
     };
 
+    User.prototype.successCb = function(data, cb) {
+      var user;
+
+      if (data.worked) {
+        if (DC.oauth) {
+          document.location = data.redirect;
+        }
+        user = new User(data.user);
+        user.accessToken = data.access_token;
+        return cb(null, user);
+      } else {
+        return cb(data.errors[0], null);
+      }
+    };
+
     User.prototype.signup = function(cb) {
       var _this = this;
 
@@ -111,14 +126,7 @@
         dataType: 'json',
         type: 'post',
         success: function(data) {
-          if (data.worked) {
-            if (DC.oauth) {
-              document.location = data.redirect;
-            }
-            return cb(null, new User(data.user));
-          } else {
-            return cb(data.errors[0], null);
-          }
+          return _this.successCb(data, cb);
         },
         error: function(e) {
           return cb(error("Server Error"));
@@ -201,8 +209,14 @@
         olark('api.chat.onMessageToOperator', function(event) {
           return _this.event(userId, 'Olark Message Sent', event.message.body);
         });
-        return olark('api.chat.onMessageToVisitor', function(event) {
+        olark('api.chat.onMessageToVisitor', function(event) {
           return _this.event(userId, 'Olark Message Received', event.message.body);
+        });
+      }
+      if (opts.hashChanged) {
+        this.hashChangedCallback = opts.hashChanged;
+        return $(window).one('hashchange', function() {
+          return _this.handleHashChange(opts.hashChanged);
         });
       }
     };
@@ -241,6 +255,44 @@
           return cb(error("Server error"));
         }
       });
+    };
+
+    Dailycred.prototype.handleHashChange = function(cb) {
+      var accessToken, url;
+
+      accessToken = this.getTokenFromHash();
+      if (accessToken === null) {
+        return;
+      }
+      if (cb.length === 1) {
+        return cb(accessToken);
+      } else {
+        url = "https://www.dailycred.com/graph/me.json?client_id=" + this.clientId + "&access_token=" + accessToken;
+        return $.ajax({
+          url: url,
+          dataType: 'json',
+          success: function(data) {
+            return cb(accessToken, new User(data));
+          }
+        });
+      }
+    };
+
+    Dailycred.prototype.getTokenFromHash = function() {
+      var accessToken, hash, param, params, parts, tokenQuery, _i, _len;
+
+      hash = document.location.hash;
+      accessToken = null;
+      tokenQuery = document.location.hash.substring(1);
+      params = tokenQuery.split("&");
+      for (_i = 0, _len = params.length; _i < _len; _i++) {
+        param = params[_i];
+        parts = param.split("=");
+        if (parts[0].indexOf("access_token") !== -1) {
+          accessToken = parts[1];
+        }
+      }
+      return accessToken;
     };
 
     Dailycred.prototype.tag = function(id, tag, cb) {

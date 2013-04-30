@@ -72,6 +72,15 @@ class User
       params.push "ajax=true"
     params.join "&"
 
+  successCb: (data, cb) ->
+    if data.worked
+      document.location = data.redirect if DC.oauth
+      user = new User(data.user)
+      user.accessToken = data.access_token
+      cb null, user
+    else
+      cb data.errors[0], null
+
   #signup a user
   # cb is a function that takes and error
   # and a user object if successful, like
@@ -82,13 +91,9 @@ class User
       dataType: 'json'
       type: 'post'
       success: (data) =>
-        if data.worked
-          document.location = data.redirect if DC.oauth
-          cb null, new User(data.user)
-        else
-          cb data.errors[0], null
+        @successCb data, cb
       error: (e) =>
-          cb error "Server Error"
+        cb error "Server Error"
 
   # see User#signin
   signin: (cb) ->
@@ -155,6 +160,11 @@ class Dailycred
         @event userId, 'Olark Message Received', event.message.body
       #if opts.triggers
         #fire events on custom elements
+    if opts.hashChanged
+      @hashChangedCallback = opts.hashChanged
+      $(window).one 'hashchange', =>
+        @handleHashChange(opts.hashChanged)
+        
 
   event: (id, key, val, cb)->
     cb = cb || ->
@@ -177,6 +187,30 @@ class Dailycred
           cb error("Unable to fire event for user")
       error: ->
         cb error "Server error"
+
+  handleHashChange: (cb)->
+    accessToken = @getTokenFromHash()
+    return if accessToken == null
+    if cb.length == 1
+      cb(accessToken)
+    else
+      url = "https://www.dailycred.com/graph/me.json?client_id=#{@clientId}&access_token=#{accessToken}"
+      $.ajax
+        url: url
+        dataType: 'json'
+        success: (data) ->
+          cb(accessToken, new User(data))
+
+  getTokenFromHash: ->
+    hash = document.location.hash
+    accessToken = null
+    tokenQuery = document.location.hash.substring(1)
+    params = tokenQuery.split("&")
+    for param in params
+      parts = param.split("=")
+      if parts[0].indexOf("access_token") != -1
+        accessToken = parts[1]
+    accessToken
 
   tag: (id, tag, cb) ->
     @tagOrUntag tagUrl, id, tag, cb

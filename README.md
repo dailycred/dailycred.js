@@ -23,7 +23,8 @@ Then initialize the library with your [client_id](https://www.dailycred.com/admi
       DC.init({
         "clientId" : 'YOUR_CLIENT_ID', // your dailycred client_id, only required when not using the tracking script
         "callback" : 'http://your_callback_url.com/callback', //your OAuth callback URL. this is required if you specify OAuth == true
-        "oauth"    : true // defaults to false. Specifying OAuth to true will send all users to the specified callback URL after successfully signing in
+        "oauth"    : true, // defaults to false. Specifying OAuth to true will send all users to the specified callback URL after successfully signing in
+        "hashChanged": function(accessToken, user){ alert("Hello "+user.email+"!");} // this callback will only be fired during the client-side Oauth flow. If an access_token parameter is present in the url's hash fragment, the user will be automatically fetched for you. If you don't specify a second parameter in this function, the user won't be fetched and the access token will be parsed and returned immediately.
       });
     </script>  
 
