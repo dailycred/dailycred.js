@@ -71,3 +71,10 @@ The `event` method requires a `user_id` and `key` parameter, with an optional `v
 	DC.event "xxx-yyy-xxx-yyy", "Stopped Homepage Video", video.playbackTime
 	
 	DC.event user.id, "Donated", $('#donation').val()
+
+
+## jQuery Plugin
+
+### This library includes a jQuery plugin for building HTML forms with Dailycred.
+
+Visit [the documentation on dailycred](https://www.dailycred.com/docs/jquery) for usage and tips.

@@ -1,5 +1,5 @@
 (function() {
-  var Dailycred, ModalTemplate, User, badRedirectUrl, baseUrl, connectUrl, customEventUrl, error, fixBools, map, signInUrl, signUpUrl, tagUrl, templateUrl, toType, untagUrl,
+  var Dailycred, ModalTemplate, User, badRedirectUrl, baseUrl, connectUrl, customEventUrl, defaults, error, fixBools, map, methods, params, signInUrl, signUpUrl, tagUrl, templateUrl, toType, untagUrl,
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   baseUrl = (typeof dc_opts !== "undefined" && dc_opts !== null ? dc_opts.home : void 0) || "https://www.dailycred.com";
@@ -422,5 +422,107 @@
   };
 
   this.DC = new Dailycred;
+
+  defaults = {
+    site: "https://www.dailycred.com",
+    style: 'oauth',
+    method: 'signin',
+    action: function() {
+      return "/" + this.style + "/api/" + this.method + ".json";
+    },
+    error: function() {},
+    success: function() {},
+    after: function() {}
+  };
+
+  params = function(hash, $el) {
+    var parms, str;
+
+    parms = [];
+    $.each(hash, function(k, v) {
+      if (["client_id", "redirect_uri", "state"].indexOf(k) > -1) {
+        return parms.push("" + k + "=" + v);
+      }
+    });
+    str = parms.join("&") + ("&" + ($el.serialize().replace(/[^&]+=\.?(?:&|$)/g, '').replace(/&$/, '').replace(/\?$/, '')));
+    if (str.length > 0) {
+      str = "?" + str;
+    }
+    return str;
+  };
+
+  methods = {
+    init: function(opts) {
+      opts = opts || {};
+      $.each(defaults, function(k, v) {
+        return opts[k] = opts[k] || v;
+      });
+      this.data('dailycred', opts);
+      this.submit(function(e) {
+        methods['submit']($(e.target));
+        return e.preventDefault();
+      });
+      this.find('input').keyup(function(e) {
+        if (e.which === 13) {
+          methods['submit']($(e.target).closest('form'));
+          return e.preventDefault();
+        }
+      });
+      return this;
+    },
+    submit: function($el) {
+      var data, url;
+
+      if (!$el) {
+        $el = this;
+      }
+      data = $el.data('dailycred');
+      url = "" + data.site + (data.action()) + (params(data, $el));
+      $.ajax({
+        url: url,
+        dataType: 'json',
+        type: 'post',
+        success: function(response) {
+          if (response.worked) {
+            return data.after(void 0, response);
+          } else {
+            return data.after(response.errors[0]);
+          }
+        },
+        error: function() {
+          var e;
+
+          e = {
+            message: "Server Error.",
+            attribute: "Form"
+          };
+          return data.after(e);
+        }
+      });
+      return false;
+    },
+    method: function(action) {
+      var data;
+
+      data = this.data('dailycred');
+      data.method = action;
+      return this.data('dailycred', data);
+    }
+  };
+
+  $.fn.dailycred = function(method, arg) {
+    return this.each(function() {
+      var $this;
+
+      $this = $(this);
+      if (methods[method]) {
+        return methods[method].apply($this, [arg]);
+      } else if (typeof method === 'object' || !method) {
+        return methods.init.apply($this, [method]);
+      } else {
+        return $.error('Method ' + method + ' does not exist on jQuery.dailycred');
+      }
+    });
+  };
 
 }).call(this);
